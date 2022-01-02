@@ -1,0 +1,13 @@
+{
+  "verbose": true,
+  "ignore": ["node_modules", ".next"],
+  "watch": [
+    "pages/**/*",
+    "UI/",
+    "index.js",
+    "styles/**/*",
+    "main.css",
+    "tailwind.config.js"
+  ],
+  "ext": "js json scss css"
+}
