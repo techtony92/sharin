@@ -2,6 +2,7 @@
   "name": "sharin",
   "private": true,
   "scripts": {
+    "test": "jest --watchAll --verbose --coverage",
     "dev": "nodemon --exec \"npm run build && npm start\"",
     "build": "next build",
     "start": "next start",
@@ -9,9 +10,11 @@
   },
   "dependencies": {
     "@databases/pg": "^5.3.0",
+    "@types/jest": "^27.4.0",
     "add": "^2.0.6",
     "cloudinary": "^1.27.1",
     "dotenv": "^10.0.0",
+    "jest": "^27.4.7",
     "jsonwebtoken": "^8.5.1",
     "next": "12.0.7",
     "next-auth": "^4.0.6",

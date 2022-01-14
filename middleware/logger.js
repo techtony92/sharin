@@ -4,7 +4,7 @@ const API_GATE__LOGGER = (req, res, next) => {
   console.log({ headers });
   console.log(url);
   console.log(method);
-  console.log(body);
+
   next();
 };
 

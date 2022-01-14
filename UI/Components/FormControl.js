@@ -5,6 +5,7 @@ export const FormCharacterInputField = ({
   label,
   labelClassNames,
   fieldClassNames,
+  placeholder,
   theme,
   name,
 }) => {
@@ -26,6 +27,7 @@ export const FormCharacterInputField = ({
           value={inputValue}
           type={type}
           name={name}
+          placeholder={placeholder ? placeholder : ""}
           onChange={(event) => updateInputValue(event.target.value)}
         />
       </div>

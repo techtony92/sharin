@@ -1,11 +1,14 @@
 import NextAuth from "next-auth";
+import { Connect, queryPostgres } from "DataBase/postgres";
+import { modify__email } from "serverUtil/normalize";
+import { sql } from "@databases/pg";
 import GoogleProvider from "next-auth/providers/google";
-import { encodeToken, decodeToken } from "util/jwt";
 export default NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
+      checks: ["pkce", "state"],
     }),
   ],
   secret: process.env.SECRET,
@@ -23,6 +26,16 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, user, account, profile, isNewUser }) {
+      await user;
+      console.log("user");
+      console.log(user);
+      if (user) {
+        let postgres = Connect();
+        let isInUse = verifyEmail(postgres, user);
+        if (!isInUse) {
+          registerUser(postgres, user, account);
+        }
+      }
       return token;
     },
     async session({ session, token, user }) {
@@ -38,3 +51,30 @@ export default NextAuth({
     },
   },
 });
+
+const verifyEmail = (postgres, user) => {
+  let inUse = false;
+  queryPostgres(
+    postgres,
+    sql`SELECT * FROM users WHERE email = ${user.email}`,
+    (results) => {
+      if (results.length > 0) {
+        inUse = true;
+        postgres.dispose();
+      }
+    }
+  );
+};
+
+const registerUser = (postgres, user, account) => {
+  queryPostgres(
+    postgres,
+    sql`INSERT INTO users (username , email , password, posts, favorites ) values(${
+      user.name
+    }, ${modify__email(user.email)}, ${account.type},${0}, ${0})`,
+    (results) => {
+      console.log(results);
+      postgres.dispose();
+    }
+  );
+};

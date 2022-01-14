@@ -1,9 +1,10 @@
 import nextConnect from "next-connect";
 import API_GATE__AUTHENTICATION from "middleware/authentication";
 import API_GATE__LOGGER from "middleware/logger";
-import cloudinary from "cloudinary";
+import { cloudinaryUpload } from "../../serverUtil/cloudinary";
 
 import { onError, onNoMatch } from "util/nextConnectOptions";
+import { URL_To_File } from "../../serverUtil/URI_To_Buffer";
 
 export const config = {
   api: {
@@ -18,7 +19,10 @@ const nextRouteDirector = nextConnect({
 });
 
 nextRouteDirector.post(API_GATE__LOGGER, (req, res) => {
-  console.log("posted");
+  const { media, id } = req.body;
+  URL_To_File(media, id);
+  cloudinaryUpload(id);
+  console.log("profilePhotoUploaded");
 });
 
 export default nextRouteDirector;

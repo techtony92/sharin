@@ -5,6 +5,7 @@ import { defaultBanner, profilePhoto1 } from "util/imageBank";
 import { TextButton } from "../UI/Components/Button";
 import { AuthenticationGate } from "UI/Layouts/AuthenticationGate";
 import { useState } from "react";
+import { beginMediaConversion } from "util/mediaUtil";
 export default function Dashboard() {
   const [focused, setFocused] = useState("");
 
@@ -28,18 +29,16 @@ export default function Dashboard() {
   };
   const changeAvatar = (event) => {
     if (event.target.files === null) return;
-    let reader = new FileReader();
-    reader;
-
-    event.target.files[0];
-
-    const data = "some data";
-    fetch("/api/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+    const reader = new FileReader();
+    beginMediaConversion(event.target.files[0], reader, (media) => {
+      let identifier = event.target.getAttribute("id");
+      fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ media: media, id: identifier }),
+      });
     });
   };
   return (
@@ -60,6 +59,15 @@ export default function Dashboard() {
                 src={defaultBanner}
                 layout={"fill"}
                 waterFall={false}
+                waterFallElements={
+                  <input
+                    id="banner"
+                    className="rounded-full opacity-0 w-full h-full absolute z-10 pointer-events-auto"
+                    accept="image/png, image/jpeg images/jpg"
+                    type={"file"}
+                    onChange={(event) => changeAvatar(event)}
+                  />
+                }
               />
               <NextPortrait
                 classes={"relative bottom-32 w-15 h-15 m-auto"}
@@ -69,7 +77,7 @@ export default function Dashboard() {
                 waterFallProps={"rounded-full"}
                 waterFallElements={
                   <input
-                    id="uploadProfileAvatar"
+                    id="avatar"
                     className="rounded-full opacity-0 w-full h-full absolute z-10 pointer-events-auto"
                     accept="image/png, image/jpeg images/jpg"
                     type={"file"}

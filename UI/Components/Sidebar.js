@@ -1,4 +1,5 @@
 import NextPortrait from "./NextPortrait";
+import Link from "next/link";
 import option_Cars from "../../assets/image/cars.jpg";
 import option_Art from "../../assets/image/art.jpg";
 import option_Food from "../../assets/image/food.jpg";
@@ -25,13 +26,15 @@ const SideBar = () => {
           Sharin
         </h1>
       </div>
-      <div
-        id="sideBarHome"
-        className=" w-30 h-auto flex flex-row justify-start items-center mb-14 pl-8"
-      >
-        <FaHome className={"text-textSize__4"} />
-        <h3 className="text-textSize__Labels ml-8">Home</h3>
-      </div>
+      <Link passHref={true} href="/home">
+        <div
+          id="sideBarHome"
+          className=" w-30 h-auto flex flex-row justify-start items-center mb-14 pl-8"
+        >
+          <FaHome className={"text-textSize__4"} />
+          <h3 className="text-textSize__Labels ml-8">Home</h3>
+        </div>
+      </Link>
       <h1
         id="sideBarTitle"
         className="text-textSize__2_5 mb-8 text-DarkMode__text"
