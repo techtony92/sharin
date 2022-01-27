@@ -35,17 +35,20 @@ nextRouteDirector.post("/api/upload/content", (req, res) => {
       queryPostgres(
         postgres,
         sql`SELECT * FROM users WHERE email=${modify__email(ownerEmail)}`,
-        ({ id, email, posts }) => {
+        ({ id, email, posts }, status) => {
+          if (status === "error") return;
           queryPostgres(
             postgres,
             sql`INSERT INTO posts (post_type, post_content, post_owner, post_category) VALUES (${resource_type}, ${public_id}, ${id}, ${"data"})`,
-            (results) => {
-              console.log({ queryPostgres, results });
+            (results, status) => {
+              if (status === "error") return;
+              console.log(results);
               queryPostgres(
                 postgres,
                 sql`UPDATE users SET posts=${posts + 1} WHERE id=${id}`,
-                (results) => {
-                  console.log({ queryPostgres, results });
+                (results, status) => {
+                  if (status === "error") return;
+                  console.log(results);
                   postgres.dispose();
                 }
               );
@@ -53,6 +56,7 @@ nextRouteDirector.post("/api/upload/content", (req, res) => {
           );
         }
       );
+      postgres.dispose();
     }
   );
   res.send({ message: "Upload Sucessful" });

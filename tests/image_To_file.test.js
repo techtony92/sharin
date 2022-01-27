@@ -1,12 +1,10 @@
 const { mkdirSync, writeFileSync, existsSync } = require("fs");
 const { format, join } = require("path");
-const { Buffer } = require("buffer");
-const base64_To_ImageBuffer = require("../serverUtil/URI_To_Buffer");
 const data = require("./mockImageData");
 console.log(__dirname);
 
 describe("File System Processing", () => {
-  it("Should check if temp directory is available and if not, then create it", () => {
+  it.skip("Should check if temp directory is available and if not, then create it", () => {
     let projectPath = format({
       dir: join(__dirname, ".."),
     });

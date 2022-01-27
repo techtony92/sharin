@@ -5,6 +5,15 @@ export const Connect = () => {
 };
 
 export const queryPostgres = async (postgres, queryString, returnResult) => {
-  let results = await postgres.query(queryString);
-  returnResult(results[0]);
+  let queryStatus = false;
+  try {
+    let results = await postgres.query(queryString);
+    console.log(results);
+    queryStatus = true;
+    returnResult(results[0], queryStatus);
+  } catch (error) {
+    queryStatus = false;
+    console.error(error);
+    returnResult("error", queryStatus);
+  }
 };

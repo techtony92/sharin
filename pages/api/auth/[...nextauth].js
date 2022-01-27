@@ -27,8 +27,7 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user, account, profile, isNewUser }) {
       await user;
-      console.log("user");
-      console.log(user);
+
       if (user) {
         let postgres = Connect();
         let isInUse = verifyEmail(postgres, user);
@@ -57,13 +56,15 @@ const verifyEmail = (postgres, user) => {
   queryPostgres(
     postgres,
     sql`SELECT * FROM users WHERE email = ${user.email}`,
-    (results) => {
+    (results, status) => {
+      if (status === "error") return;
       if (results.length > 0) {
         inUse = true;
         postgres.dispose();
       }
     }
   );
+  postgres.dispose();
 };
 
 const registerUser = (postgres, user, account) => {
